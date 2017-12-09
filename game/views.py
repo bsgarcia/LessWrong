@@ -1,12 +1,12 @@
 from django.http import HttpResponse
 from django.views.decorators.csrf import csrf_exempt
-import numpy as np
 from .models import Propositions
+import random
 
 @csrf_exempt
 def index(request):
     """aiguille joueur"""
-    return HttpResponse(str(np.random.choice(["first", "second"])))
+    return HttpResponse(str(random.choice(["first", "second"])))
 
 
 @csrf_exempt
@@ -15,7 +15,7 @@ def propose(request):
     """called by first player"""
     entry = Propositions(accessible=True,complete=False,proposition=v,answer=False)
     entry.save()
-    return HttpResponse(str(np.random.choice(["first", "second"])))
+    return HttpResponse(str(random.choice(["first", "second"])))
 
 ##@csrf_exempt
 ##def create(request):
@@ -28,8 +28,8 @@ def propose(request):
 @csrf_exempt
 def what_has_been_proposed(request):
     """Called by second player"""
-    if 'ID' in request.POST:
-        _id_ = request.POST['ID']
+    if 'id' in request.POST:
+        _id_ = request.POST['id']
         request = Propositions.objects.get(id=_id_).proposition
         return HttpResponse(request)
     else:
