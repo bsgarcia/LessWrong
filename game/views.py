@@ -16,8 +16,17 @@ def index(request):
 
     parties_libres = Propositions.objects.filter(accessible=True)
     if len(parties_libres) > 0:
-        return HttpResponse(str(parties_libres[0].id)+"/2")
+
+        ## C'est joueur 2
+        _id_ = parties_libres[0].id
+        entry = Propositions.objects.get(id=_id_)
+        entry.accessible = False
+        entry.save(force_update=True)
+        return HttpResponse(str(_id_)+"/2")
+
     else:
+
+        ## C'est joueur 1
         entry = Propositions(
             accessible=True, complete=False, proposition=0, answer=None, group=group)
         entry.save()
@@ -77,8 +86,7 @@ def acceptation(request):
     _id_ = request.POST['id']
     entry = Propositions.objects.get(id=_id_)
     entry.answer = choice  # rentre le choix du J2 dans la table
-    entry.save(force_update=True
-               )
+    entry.save(force_update=True)
     return HttpResponse(choice)
 
 
