@@ -86,7 +86,7 @@ def accepted(request):
         if Propositions.objects.get(id=_id_).answer is not None:
             request = "1/"+str(Propositions.objects.get(id=_id_).answer) #récupération de l'acceptation ou non du J2 par le J1
         else:
-            request = "0/"+str(Propositions.objects.get(id=_id_).answer)  # récupération de l'acceptation ou non du J2 par le J1
+            request = "0/-1"  # récupération de l'acceptation ou non du J2 par le J1
         return HttpResponse(request)
     #
     # retourner soit 00/01/10/11 <J2 a répondu><Réponse de J2> en str
