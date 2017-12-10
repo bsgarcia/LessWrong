@@ -15,10 +15,11 @@ def index(request):
     # redirect "/<id game>/<1>" ou "/<id_game>/<2>"
 
     parties_libres = Propositions.objects.filter(accessible=True)
-    if(len(parties_libres) > 0):
+    if len(parties_libres) > 0:
         return HttpResponse(str(parties_libres[0].id)+"/2")
     else:
-        entry = Propositions(accessible=False,complete=False,proposition=0,answer=None,group=group)
+        entry = Propositions(
+            accessible=True, complete=False, proposition=0, answer=None, group=group)
         entry.save()
         _id_ = Propositions.objects.last().id
         return HttpResponse(str(_id_)+"/1")
@@ -40,6 +41,7 @@ def propose(request):
 
     entry = Propositions.objects.get(id=_id_)
     entry.proposition = v
+    entry.complete = True
     entry.save(force_update=True)
 
     return HttpResponse("ok")
@@ -51,12 +53,13 @@ def what_has_been_proposed(request):
 
     if 'id' in request.POST:
         _id_ = request.POST['id'] #récupère id
-        result = ""
-        if((Propositions.objects.get(id=_id_)).accessible):
-            result = result+"0"
+
+        if Propositions.objects.get(id=_id_).complete:
+            result = "0"
         else:
-            result = result+"1"
-        result = result+"/"+str((Propositions.objects.get(id=_id_)).proposition)
+            result = "1"
+
+        result = result + "/" + str(Propositions.objects.get(id=_id_).proposition)
 
         return HttpResponse(result)
 
@@ -73,8 +76,9 @@ def acceptation(request):
     choice = request.POST["choice"]
     _id_ = request.POST['id']
     entry = Propositions.objects.get(id=_id_)
-    entry.answer = choice #rentre le choix du J2 dans la table
-    entry.save()
+    entry.answer = choice  # rentre le choix du J2 dans la table
+    entry.save(force_update=True
+               )
     return HttpResponse(choice)
 
 
