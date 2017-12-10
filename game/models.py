@@ -5,5 +5,5 @@ class Propositions(models.Model):
     accessible = models.BooleanField()
     complete = models.BooleanField()
     proposition = models.PositiveIntegerField()
-    answer = models.BooleanField()
-
+    answer = models.NullBooleanField()
+    group = models.BooleanField(default=False)
